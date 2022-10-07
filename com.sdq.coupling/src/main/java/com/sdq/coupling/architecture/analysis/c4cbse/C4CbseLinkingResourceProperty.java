@@ -7,7 +7,7 @@ import com.sdq.coupling.util.Location;
 /**
  * Extends the AbstractCallArchitectureProperty class for an encrypted linking 
  * resource property for the c4cbse framework.
- * 
+ *
  * @author Laura
  *
  */
@@ -15,13 +15,6 @@ public class C4CbseLinkingResourceProperty extends AbstractCallArchitecturePrope
   
   private String linkingResourceId;
 
-  /**
-   * 
-   * @param architecturePropertyType
-   * @param caller
-   * @param callee
-   * @param linkingResourceId
-   */
   public C4CbseLinkingResourceProperty(ArchitecturePropertyType architecturePropertyType, 
       Location caller, Location callee, String linkingResourceId) {
     super(architecturePropertyType, caller, callee);

@@ -15,20 +15,15 @@ public class LinkingResource {
 
   private ResourceContainer source;
   private ResourceContainer target;
-  private String sourceId;
-  private String targetId;
   private List<ConfidentialityProperty> confidentialityProperties = 
       new LinkedList<ConfidentialityProperty>();
 
   protected LinkingResource(String id, String entityName, 
-      ResourceContainer source, String sourceId, 
-      ResourceContainer target, String targetId) {
+      ResourceContainer source, ResourceContainer target) {
     this.id = id;
     this.entityName = entityName;
     this.source = source;
-    this.sourceId = sourceId;
     this.target = target;
-    this.targetId = targetId;
   }
 
   protected String getId() {
@@ -42,17 +37,9 @@ public class LinkingResource {
   protected ResourceContainer getSource() {
     return this.source;
   }
-  
-  protected String getSourceId() {
-    return this.sourceId;
-  }
 
   protected ResourceContainer getTarget() {
     return this.target;
-  }
-  
-  protected String getTargetId() {
-    return this.targetId;
   }
 
   protected List<ConfidentialityProperty> getConfidentialityProperties() {

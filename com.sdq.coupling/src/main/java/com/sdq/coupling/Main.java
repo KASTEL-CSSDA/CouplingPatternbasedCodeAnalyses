@@ -16,14 +16,27 @@ import com.sdq.coupling.code.analysis.AbstractPatternViolation;
 import com.sdq.coupling.code.analysis.IPatternAnalysis;
 import com.sdq.coupling.code.analysis.cognicrypt.CognicryptPatternAnalysis;
 import com.sdq.coupling.mapping.AbstractPropertyViolationMapping;
-import com.sdq.coupling.mapping.CarismaCognicryptMapping;
+import com.sdq.coupling.mapping.C4CbseCognicryptMapping;
 import com.sdq.coupling.sdg.AbstractSdgEdge;
 import com.sdq.coupling.sdg.AbstractSdgVertex;
 import com.sdq.coupling.sdg.ISdgGenerator;
 import com.sdq.coupling.sdg.joana.JoanaSdgGenerator;
 import com.sdq.coupling.ui.UserInterface;
 
+/**
+ * Runs the analysis.
+ *
+ * @author Laura
+ *
+ */
 public class Main {
+  
+  /**
+   * Runs the coupling analysis.
+   *
+   * @param modelDirectoryPath Path to the architecture model.
+   * @param jarFilePath Path to the analyzed jar file.
+   */
   public static void run(String modelDirectoryPath, String jarFilePath) {
     // (1) Extract architecture security properties.
     IArchitecturePropertyManager apm = new C4CbseArchitecturePropertyManager();
@@ -32,7 +45,7 @@ public class Main {
 
     // (2) Extract pattern violations.
     IPatternAnalysis pa = new CognicryptPatternAnalysis();
-    List<AbstractPatternViolation> pvs = pa.findViolations(jarFilePath); // returns mocked, but "real" violations
+    List<AbstractPatternViolation> pvs = pa.findViolations(jarFilePath); 
     System.out.println(pvs + "\n");
 
     // (3) Generate SDG.
@@ -40,14 +53,13 @@ public class Main {
     Graph<AbstractSdgVertex, AbstractSdgEdge> sdg = sg.generate(jarFilePath);
 
     // (4) Load property to pattern violation mapping.
-    AbstractPropertyViolationMapping ppm = new CarismaCognicryptMapping(); // already maps common errors to common
-                                                                           // properties internally
+    AbstractPropertyViolationMapping ppm = new C4CbseCognicryptMapping(); 
 
     // (5) Find violated properties.
     ICouplingAnalysis ca = new CouplingAnalysisSdg();
     List<AbstractArchitectureProperty> vp = ca.getViolatedProperties(aps, pvs, sdg, ppm);
     System.out.println("Found " + vp.size() + " violated properties.\n");
-    
+
     // (6) Remove the properties that are violated.
     apm.removeProperties(modelDirectoryPath, vp);
   }

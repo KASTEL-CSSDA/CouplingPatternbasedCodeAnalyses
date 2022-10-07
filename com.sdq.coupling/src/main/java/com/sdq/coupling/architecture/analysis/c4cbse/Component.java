@@ -2,8 +2,7 @@ package com.sdq.coupling.architecture.analysis.c4cbse;
 
 /**
  * Represents a palladio component.
- * 
- * 
+ *
  * @author Laura
  *
  */

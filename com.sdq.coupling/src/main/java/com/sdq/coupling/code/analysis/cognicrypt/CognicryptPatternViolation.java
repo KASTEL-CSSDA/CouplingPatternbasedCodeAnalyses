@@ -6,13 +6,18 @@ import com.sdq.coupling.code.analysis.AbstractPatternViolation;
 import com.sdq.coupling.code.analysis.PatternViolationType;
 import com.sdq.coupling.util.Location;
 
+/**
+ * Realizes the AbstractPatternViolation class for a cognicrypt violation.
+ *
+ * @author Laura
+ *
+ */
 public class CognicryptPatternViolation extends AbstractPatternViolation {
 
-	//TODO change affectedLines from List to int
-	public CognicryptPatternViolation(Location errorLocation, Location violatedUsageLocation,
-			PatternViolationType violationType, List<Integer> affectedLines) {
-		super(errorLocation, violatedUsageLocation, violationType, affectedLines);
-	}
-
+  // TODO change affectedLines from List to int
+  public CognicryptPatternViolation(Location errorLocation, Location violatedUsageLocation,
+      PatternViolationType violationType, List<Integer> affectedLines) {
+    super(errorLocation, violatedUsageLocation, violationType, affectedLines);
+  }
 
 }

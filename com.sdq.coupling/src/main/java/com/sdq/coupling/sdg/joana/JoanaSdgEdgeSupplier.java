@@ -1,18 +1,23 @@
 package com.sdq.coupling.sdg.joana;
 
+import com.sdq.coupling.sdg.AbstractSdgEdge;
 import java.util.function.Supplier;
 
-import com.sdq.coupling.sdg.AbstractSdgEdge;
-
+/**
+ * Creates an empty JoanaSdgEdge. Used for reading in graphml files with
+ * JGraphT. 
+ *
+ * @author Laura
+ *
+ */
 public class JoanaSdgEdgeSupplier implements Supplier<AbstractSdgEdge> {
 
-	
-	public JoanaSdgEdgeSupplier() {
+  public JoanaSdgEdgeSupplier() {
 
-	}
-	
-	public AbstractSdgEdge get() {
-		return new JoanaSdgEdge();
-	}
+  }
+
+  public AbstractSdgEdge get() {
+    return new JoanaSdgEdge();
+  }
 
 }

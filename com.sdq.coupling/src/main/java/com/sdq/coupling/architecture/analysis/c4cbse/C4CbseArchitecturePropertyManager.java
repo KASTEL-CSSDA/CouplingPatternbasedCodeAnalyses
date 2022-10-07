@@ -63,14 +63,13 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
   /**
    * Adds components to their corresponding resource container.
    *
-   * @param resourceEnvironment       The resource environment of the c4cbse
-   *                                  model.
-   * @param components                The list of components to add.
+   * @param resourceEnvironment The resource environment of the c4cbse
+   * model.
+   * @param components The list of components to add.
    * @param allocationContextFilePath Path to the allocation context file of the
-   *                                  c4cbse model, which contains the link
-   *                                  between components and resource containers.
-   * @param systemFilePath
-   * @throws ParserConfigurationException
+   * c4cbse model, which contains the link between components and resource containers.
+   * @param systemFilePath The file to the system.default file.
+   * @throws ParserConfigurationException 
    * @throws SAXException
    * @throws IOException
    */
@@ -94,8 +93,6 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
     NodeList systemElements = systemXmlDocument
         .getElementsByTagName("assemblyContexts__ComposedStructure");
 
-    // iterate through all allocation elements and
-
     for (int i = 0; i < allocationElements.getLength(); i++) {
       Node node = allocationElements.item(i);
       if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -109,10 +106,12 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
             .item(0);
         String systemId = assemblyElement.getAttribute("href").split("#")[1];
         System.out.println("sysId:" + systemId);
+        
         for (ResourceContainer resourceContainer : resourceContainers) {
           if (resourceContainer.getId().equals(resourceContainerId)) {
             System.out.println("found equal resource container for allocation");
             List<String> componentIds = new ArrayList<>();
+            
             for (int j = 0; j < systemElements.getLength(); j++) {
               Node systemNode = systemElements.item(j);
               Element systemElement = (Element) systemNode;
@@ -151,9 +150,10 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
   }
 
   /**
-   * 
-   * @param repositoryFilePath
-   * @return
+   * Parses the components of the default.repository file.
+   *
+   * @param repositoryFilePath The path to the repository file.
+   * @return Returns a list of components.
    * @throws ParserConfigurationException
    * @throws SAXException
    * @throws IOException
@@ -188,9 +188,10 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
 
   
   /**
-   * 
-   * @param resourceEnvironmentFilePath
-   * @return
+   * Parses the resource environment of the c4cbse model.
+   * @param resourceEnvironmentFilePath Path to the default.resourceenvironment file.
+   * @return Returns the parsed resource environment containing the linking resources 
+   * and the resource containers
    * @throws ParserConfigurationException
    * @throws SAXException
    * @throws IOException
@@ -206,6 +207,7 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
     xmlDocument.getDocumentElement().normalize();
     NodeList resourceElements = xmlDocument
         .getElementsByTagName("resourceContainer_ResourceEnvironment");
+    
     for (int i = 0; i < resourceElements.getLength(); i++) {
       Node resourceNode = resourceElements.item(i);
       if (resourceNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -219,6 +221,7 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
     }
     NodeList linkingElements = xmlDocument
         .getElementsByTagName("linkingResources__ResourceEnvironment");
+    
     for (int j = 0; j < linkingElements.getLength(); j++) {
       Node node = linkingElements.item(j);
       if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -232,6 +235,7 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
         String targetId = connectedResources.split(" ")[1].substring(1);
         ResourceContainer source = null;
         ResourceContainer target = null;
+        
         for (ResourceContainer container : resourceContainers) {
           String resourceId = container.getId();
           System.out.println("linkingSource:" + resourceId + "  equals  " + sourceId);
@@ -243,8 +247,9 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
           }
         }
         LinkingResource linkingResource = new LinkingResource(id, entityName, 
-            source, source.getId(), target, target.getId());
+            source, target);
         NodeList stereoTypes = xmlDocument.getElementsByTagName("stereotypeApplications");
+        
         for (int i = 0; i < stereoTypes.getLength(); i++) {
           Node stereoTypeNode = stereoTypes.item(0);
           Element stereoTypeElement = (Element) stereoTypeNode;
@@ -262,6 +267,9 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
     return resourceEnvironment;
   }
 
+  /**
+   * Extracts the architecture properties from the passed model file. 
+   */
   @Override
   public List<AbstractArchitectureProperty> getProperties(String modelDirectoryPath) {
     List<String> modelFiles = Stream.of(new File(modelDirectoryPath)
@@ -311,6 +319,10 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
   }
   
 
+  /**
+   * Removes the passed properties from the c4cbse model that are violated by pattern based
+   * code violations.
+   */
   @Override
   public void removeProperties(String modelFilePath, 
       List<AbstractArchitectureProperty> violatedProperties) {
@@ -342,15 +354,16 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
               && property.getArchitecturePropertyType() == ArchitecturePropertyType.ENCRYPTED) {
             stereotype.getParentNode().removeChild(stereotype);
             xmlDocument.normalize();
-            System.out.println("Deleted C4CBSE StereotypeApplication of: " + property.getLinkingResourceId());
+            System.out.println("Deleted C4CBSE StereotypeApplication of: " 
+              + property.getLinkingResourceId());
             break;
           }
         }
         
       }
       
-      try (FileOutputStream output =
-        new FileOutputStream(modelFilePath + resourceEnvironmentFileName.split("\\.")[0] + ".coupledresourceenvironment")) {
+      try (FileOutputStream output = new FileOutputStream(modelFilePath 
+            + resourceEnvironmentFileName.split("\\.")[0] + ".coupledresourceenvironment")) {
         writeXml(xmlDocument, output);
         System.out.println("Stored updated model file in model source folder.");
       } catch (IOException | TransformerException e) {
@@ -362,15 +375,14 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
     }
   }
 
-  private static void writeXml(Document doc, OutputStream output)
-   throws TransformerException {
+  private static void writeXml(Document doc, OutputStream output) throws TransformerException {
 
-TransformerFactory transformerFactory = TransformerFactory.newInstance();
-Transformer transformer = transformerFactory.newTransformer();
-DOMSource source = new DOMSource(doc);
-StreamResult result = new StreamResult(output);
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer();
+    DOMSource source = new DOMSource(doc);
+    StreamResult result = new StreamResult(output);
 
-transformer.transform(source, result);
+    transformer.transform(source, result);
 
-}
+  }
 }
