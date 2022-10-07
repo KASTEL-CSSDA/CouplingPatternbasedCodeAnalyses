@@ -1,23 +1,23 @@
 package com.sdq.coupling.util;
 
 public class Location {
-	private String packageName;
-	private String className;
-	private String methodName;
+	private String packageName = "";
+	private String className = "";
+	private String methodName = "";
 	
 	public Location(String className) {
 		this.className = className; // TODO: not ideal, maybe have classname as first everywhere
 	}
 	
 	public Location(String packageName, String className) {
-		this.packageName = packageName;
-		this.className = className;
+		this.packageName = (packageName != null) ? packageName : "";
+		this.className = (className != null) ? className : "";
 	}
 
 	public Location(String packageName, String className, String methodName) {
-		this.packageName = packageName;
-		this.className = className;
-		this.methodName = methodName;
+		this.packageName = (packageName != null) ? packageName : "";
+		this.className = (className != null) ? className : "";
+		this.methodName = (methodName != null) ? methodName : "";
 	}
 	
 	public String getPackageName() {
@@ -37,7 +37,7 @@ public class Location {
 	}
 	
 	public boolean hasSameClassAndPackage(Location location) {
-		return location.getPackageName().equals(this.packageName) && location.getClassName().equals(this.className);
+	  return location.getPackageName().equals(this.packageName) && location.getClassName().equals(this.className);
 	}
 	
 	@Override
