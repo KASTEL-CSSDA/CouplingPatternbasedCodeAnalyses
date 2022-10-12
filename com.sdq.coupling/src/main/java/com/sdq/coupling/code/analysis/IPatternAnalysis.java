@@ -9,5 +9,5 @@ import java.util.List;
  *
  */
 public interface IPatternAnalysis {
-  public List<AbstractPatternViolation> findViolations(String projectFolderPath);
+  public List<AbstractPatternViolation> findViolations(String jarFilePath);
 }

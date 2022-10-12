@@ -235,7 +235,8 @@ public class CouplingAnalysisSdg implements ICouplingAnalysis {
         for (AbstractSdgVertex vertexWithViolation : verticesWithViolations) {
           for (AbstractPatternViolation violation : vertexWithViolation.getPatternViolations()) {
             if (propertyPatternMapping.isPropertyViolatedByViolation(property, violation)) {
-              DijkstraShortestPath<AbstractSdgVertex, AbstractSdgEdge> dijkstraShortestPath = new DijkstraShortestPath<AbstractSdgVertex, AbstractSdgEdge>(
+              DijkstraShortestPath<AbstractSdgVertex, AbstractSdgEdge> dijkstraShortestPath = 
+                  new DijkstraShortestPath<AbstractSdgVertex, AbstractSdgEdge>(
                   sdg);
               GraphPath<AbstractSdgVertex, AbstractSdgEdge> shortestPath = dijkstraShortestPath
                   .getPath(vertexWithViolation, vertexWithProperty);

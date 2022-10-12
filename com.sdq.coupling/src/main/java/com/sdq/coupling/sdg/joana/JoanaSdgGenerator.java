@@ -37,8 +37,8 @@ public class JoanaSdgGenerator implements ISdgGenerator {
       ProcessBuilder pb = new ProcessBuilder(
           "\"C:\\Program Files\\Eclipse Adoptium\\jdk-8.0.345.1-hotspot\\bin\\java.exe\"", "-jar",
           ".\\src\\main\\resources\\joana.ui.ifc.wala.cli.jar", "\"classPath " + jarFilePath + "\"",
-          "\"entry select coupling\"", "\"buildSDG\"", "\"exportSDG " + 
-          "./src/main/resources/tmp/sdg.pdg.graphml\"");
+          "\"entry select coupling\"", "\"buildSDG\"", "\"exportSDG " 
+          + "./src/main/resources/tmp/sdg.pdg.graphml\"");
       pb.directory(new File(System.getProperty("user.dir")));
 
       System.out.println("Computing SDG (this may take a while) ...");

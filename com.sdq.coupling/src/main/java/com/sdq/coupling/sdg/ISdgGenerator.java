@@ -9,5 +9,5 @@ import org.jgrapht.Graph;
  *
  */
 public interface ISdgGenerator {
-  public Graph<AbstractSdgVertex, AbstractSdgEdge> generate(String graphmlFilePath);
+  public Graph<AbstractSdgVertex, AbstractSdgEdge> generate(String jarFilePath);
 }

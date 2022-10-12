@@ -50,8 +50,6 @@ public class UserInterface {
       @Override
       public void actionPerformed(ActionEvent e) {
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("UML2 Model File (*.uml2)", "uml");
-        chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
           textFieldModel.setText(chooser.getSelectedFile().getPath());
@@ -74,7 +72,8 @@ public class UserInterface {
       @Override
       public void actionPerformed(ActionEvent e) {
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Compiled JAR File (*.jar)", "jar");
+        FileNameExtensionFilter filter = 
+            new FileNameExtensionFilter("Compiled JAR File (*.jar)", "jar");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {

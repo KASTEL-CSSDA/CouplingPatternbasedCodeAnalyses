@@ -35,7 +35,7 @@ public class CognicryptPatternAnalysis implements IPatternAnalysis {
 
   /**
    * Performs a code analysis on the passed jar file and
-   * returns the parsed pattern violations.s
+   * returns the parsed pattern violations
    *
    * @param jarFilePath The path of the file to be analyzed.
    */
