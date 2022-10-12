@@ -115,7 +115,9 @@ public class CognicryptPatternAnalysis implements IPatternAnalysis {
 
         // build errorLocation
         Location errorLocation = new Location(packageName, className, methodName);
-        PatternViolationType violationType = getViolationType(violatedClassName);
+        CognicryptViolationToPatternViolationTypeMapping mapping = 
+            new CognicryptViolationToPatternViolationTypeMapping();
+        PatternViolationType violationType = mapping.getViolationType(violatedClassName);
 
         // build codeline list
         List<Integer> codeLines = new LinkedList<Integer>();
@@ -142,16 +144,6 @@ public class CognicryptPatternAnalysis implements IPatternAnalysis {
     }
     
     return violations;
-  }
-
-  // TODO add more cases.
-  private PatternViolationType getViolationType(String violatedClass) {
-    switch (violatedClass) {
-      case "Cipher":
-        return PatternViolationType.ENCRYPTION;
-      default:
-        return null;
-    }
   }
 
 }
