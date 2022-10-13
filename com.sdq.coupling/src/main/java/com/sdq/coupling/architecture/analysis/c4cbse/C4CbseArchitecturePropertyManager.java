@@ -54,7 +54,7 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
     List<String> modelFilesFiltered = modelFiles.stream().filter(f -> f.endsWith(fileEnding))
         .collect(Collectors.toList());
     if (modelFilesFiltered.size() != 1) {
-      // TODO: throw exception or so, only one repository file should be there
+      // TODO: throw exception
       return null;
     }
     return modelFilesFiltered.get(0);
@@ -100,36 +100,29 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
         Element resourceContainerElement = (Element) allocationElement
             .getElementsByTagName("resourceContainer_AllocationContext").item(0);
         String resourceContainerId = resourceContainerElement.getAttribute("href").split("#")[1].substring(1);
-        System.out.println("resConId:" + resourceContainerId);
         Element assemblyElement = (Element) allocationElement
             .getElementsByTagName("assemblyContext_AllocationContext")
             .item(0);
         String systemId = assemblyElement.getAttribute("href").split("#")[1];
-        System.out.println("sysId:" + systemId);
         
         for (ResourceContainer resourceContainer : resourceContainers) {
           if (resourceContainer.getId().equals(resourceContainerId)) {
-            System.out.println("found equal resource container for allocation");
             List<String> componentIds = new ArrayList<>();
             
             for (int j = 0; j < systemElements.getLength(); j++) {
               Node systemNode = systemElements.item(j);
               Element systemElement = (Element) systemNode;
               String assemblyId = systemElement.getAttribute("id");
-              System.out.println(systemId + "  equals  " + assemblyId);
               if (systemId.equals(assemblyId)) {
-                System.out.println("success");
                 Element componentElement = (Element) systemElement
                     .getElementsByTagName("encapsulatedComponent__AssemblyContext").item(0);
                 String componentId = componentElement.getAttribute("href").split("#")[1];
-                System.out.println("adding:" + componentId);
                 componentIds.add(componentId);
               }
             }
 
             for (String componentId : componentIds) {
               for (Component component : components) {
-                System.out.println(component.getId() + "  equals  " + componentId);
                 if (component.getId().equals(componentId)) {
                   resourceContainer.addComponent(component);
                 }
@@ -140,12 +133,6 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
         }
       }
 
-    }
-    for (ResourceContainer con : resourceContainers) {
-      System.out.println("res size:" + con.getComponents().size());
-      for (Component com : con.getComponents()) {
-        System.out.println(com.getEntityName());
-      }
     }
   }
 
@@ -158,31 +145,43 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
    * @throws SAXException
    * @throws IOException
    */
-  private List<Component> parseComponents(String repositoryFilePath)
-      throws ParserConfigurationException, SAXException, IOException {
+  private List<Component> parseComponents(String repositoryFilePath) {
+    
     List<Component> componentList = new ArrayList<>();
     File repositoryXmlFile = new File(repositoryFilePath);
 
     DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-    Document xmlDocument = documentBuilder.parse(repositoryXmlFile);
-    xmlDocument.getDocumentElement().normalize();
-    NodeList componentElements = xmlDocument.getElementsByTagName("components__Repository");
-    for (int i = 0; i < componentElements.getLength(); i++) {
-      Node node = componentElements.item(i);
-      if (node.getNodeType() == Node.ELEMENT_NODE) {
-        Element element = (Element) node;
-        System.out.println(element.getAttribute("xsi:type"));
-        if (element.getAttribute("xsi:type").equals("repository:BasicComponent")) {
-          String id = element.getAttribute("id");
-          System.out.println(id);
-          String entityName = element.getAttribute("entityName");
-          Component component = new Component(id, entityName);
-          componentList.add(component);
+    DocumentBuilder documentBuilder;
+    try {
+      documentBuilder = documentFactory.newDocumentBuilder();
+      Document xmlDocument = documentBuilder.parse(repositoryXmlFile);
+      xmlDocument.getDocumentElement().normalize();
+      NodeList componentElements = xmlDocument.getElementsByTagName("components__Repository");
+      
+      for (int i = 0; i < componentElements.getLength(); i++) {
+        Node node = componentElements.item(i);
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+          Element element = (Element) node;
+          System.out.println(element.getAttribute("xsi:type"));
+          if (element.getAttribute("xsi:type").equals("repository:BasicComponent")) {
+            String id = element.getAttribute("id");
+            String entityName = element.getAttribute("entityName");
+            Component component = new Component(id, entityName);
+            componentList.add(component);
+          }
         }
       }
+    } catch (ParserConfigurationException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (SAXException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
-    System.out.println(componentList.size());
+    
     return componentList;
   }
 
@@ -213,7 +212,6 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
       if (resourceNode.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) resourceNode;
         String id = element.getAttribute("id").substring(1);
-        System.out.println("resourceId:" + id);
         String entityName = element.getAttribute("entityName");
         ResourceContainer resourceContainer = new ResourceContainer(id, entityName);
         resourceContainers.add(resourceContainer);
@@ -227,7 +225,6 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
       if (node.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) node;
         String id = element.getAttribute("id");
-        System.out.println("linkingId:" + id);
         String entityName = element.getAttribute("entityName");
         String connectedResources = element
             .getAttribute("connectedResourceContainers_LinkingResource");
@@ -238,8 +235,6 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
         
         for (ResourceContainer container : resourceContainers) {
           String resourceId = container.getId();
-          System.out.println("linkingSource:" + resourceId + "  equals  " + sourceId);
-          System.out.println("linkingTarget:" + resourceId + "  equals  " + targetId);
           if (resourceId.equals(sourceId)) {
             source = container;
           } else if (resourceId.equals(targetId)) {
@@ -261,7 +256,7 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
         linkingResources.add(linkingResource);
       }
     }
-    System.out.println(linkingResources.toString());
+    
     ResourceEnvironment resourceEnvironment = 
         new ResourceEnvironment(resourceContainers, linkingResources);
     return resourceEnvironment;
@@ -278,7 +273,7 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
 
     String repositoryFileName = findModelSubFileByEnding(modelFiles, ".repository");
     List<Component> components;
-    // TODO refactor
+
     try {
       components = parseComponents(modelDirectoryPath + repositoryFileName);
       String resourceEnvironmentFileName = 
@@ -354,8 +349,6 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
               && property.getArchitecturePropertyType() == ArchitecturePropertyType.ENCRYPTED) {
             stereotype.getParentNode().removeChild(stereotype);
             xmlDocument.normalize();
-            System.out.println("Deleted C4CBSE StereotypeApplication of: " 
-              + property.getLinkingResourceId());
             break;
           }
         }
@@ -365,7 +358,6 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
       try (FileOutputStream output = new FileOutputStream(modelFilePath 
             + resourceEnvironmentFileName.split("\\.")[0] + ".coupledresourceenvironment")) {
         writeXml(xmlDocument, output);
-        System.out.println("Stored updated model file in model source folder.");
       } catch (IOException | TransformerException e) {
         e.printStackTrace();
       }

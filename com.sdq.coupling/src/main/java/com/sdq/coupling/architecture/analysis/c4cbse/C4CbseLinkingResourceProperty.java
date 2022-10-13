@@ -14,6 +14,7 @@ import com.sdq.coupling.util.Location;
 public class C4CbseLinkingResourceProperty extends AbstractCallArchitectureProperty {
   
   private String linkingResourceId;
+  
   public C4CbseLinkingResourceProperty(ArchitecturePropertyType architecturePropertyType, 
       Location caller, Location callee, String linkingResourceId) {
     super(architecturePropertyType, caller, callee);
