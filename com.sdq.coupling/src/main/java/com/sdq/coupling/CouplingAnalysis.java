@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.jgrapht.Graph;
 
-import com.sdq.coupling.analysis.CouplingAnalysisSdg;
-import com.sdq.coupling.analysis.ICouplingAnalysis;
+import com.sdq.coupling.analysis.CouplingSdg;
+import com.sdq.coupling.analysis.ICoupling;
 import com.sdq.coupling.architecture.analysis.AbstractArchitectureProperty;
 import com.sdq.coupling.architecture.analysis.IArchitecturePropertyManager;
 import com.sdq.coupling.architecture.analysis.c4cbse.C4CbseArchitecturePropertyManager;
@@ -29,7 +29,7 @@ import com.sdq.coupling.ui.UserInterface;
  * @author Laura
  *
  */
-public class Main {
+public class CouplingAnalysis {
   
   /**
    * Runs the coupling analysis.
@@ -39,29 +39,33 @@ public class Main {
    */
   public static void run(String modelDirectoryPath, String jarFilePath) {
     // (1) Extract architecture security properties.
-    IArchitecturePropertyManager apm = new C4CbseArchitecturePropertyManager();
-    List<AbstractArchitectureProperty> aps = apm.getProperties(modelDirectoryPath);
-    System.out.println(aps + "\n");
+    IArchitecturePropertyManager architecturePropertyManager = 
+        new C4CbseArchitecturePropertyManager();
+    List<AbstractArchitectureProperty> architectureProperties = 
+        architecturePropertyManager.getProperties(modelDirectoryPath);
+    System.out.println(architectureProperties + "\n");
 
     // (2) Extract pattern violations.
-    IPatternAnalysis pa = new CognicryptPatternAnalysis();
-    List<AbstractPatternViolation> pvs = pa.findViolations(jarFilePath); 
-    System.out.println(pvs + "\n");
+    IPatternAnalysis patternAnalysis = new CognicryptPatternAnalysis();
+    List<AbstractPatternViolation> patternViolations = 
+        patternAnalysis.findViolations(jarFilePath); 
+    System.out.println(patternViolations + "\n");
 
     // (3) Generate SDG.
-    ISdgGenerator sg = new JoanaSdgGenerator();
-    Graph<AbstractSdgVertex, AbstractSdgEdge> sdg = sg.generate(jarFilePath);
+    ISdgGenerator sdgGenerator = new JoanaSdgGenerator();
+    Graph<AbstractSdgVertex, AbstractSdgEdge> sdg = sdgGenerator.generate(jarFilePath);
 
     // (4) Load property to pattern violation mapping.
-    AbstractPropertyViolationMapping ppm = new C4CbseCognicryptMapping(); 
+    AbstractPropertyViolationMapping mapping = new C4CbseCognicryptMapping(); 
 
     // (5) Find violated properties.
-    ICouplingAnalysis ca = new CouplingAnalysisSdg();
-    List<AbstractArchitectureProperty> vp = ca.getViolatedProperties(aps, pvs, sdg, ppm);
-    System.out.println("Found " + vp.size() + " violated properties.\n");
+    ICoupling ca = new CouplingSdg();
+    List<AbstractArchitectureProperty> violatedProperties = 
+        ca.getViolatedProperties(architectureProperties, patternViolations, sdg, mapping);
+    System.out.println("Found " + violatedProperties.size() + " violated properties.\n");
 
     // (6) Remove the properties that are violated.
-    apm.removeProperties(modelDirectoryPath, vp);
+    architecturePropertyManager.removeProperties(modelDirectoryPath, violatedProperties);
   }
 
   public static void main(String[] args) throws IOException {

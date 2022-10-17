@@ -79,17 +79,11 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
       throws ParserConfigurationException, SAXException, IOException {
     List<ResourceContainer> resourceContainers = resourceEnvironment.getResourceContainers();
 
-    File allocationXmlFile = new File(allocationContextFilePath);
-    DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-    Document allocationXmlDocument = documentBuilder.parse(allocationXmlFile);
-    allocationXmlDocument.getDocumentElement().normalize();
+    Document allocationXmlDocument = readXmlDocument(allocationContextFilePath);
     NodeList allocationElements = allocationXmlDocument
         .getElementsByTagName("allocationContexts_Allocation");
 
-    File systemXmlFile = new File(systemFilePath);
-    Document systemXmlDocument = documentBuilder.parse(systemXmlFile);
-    systemXmlDocument.getDocumentElement().normalize();
+    Document systemXmlDocument = readXmlDocument(systemFilePath);
     NodeList systemElements = systemXmlDocument
         .getElementsByTagName("assemblyContexts__ComposedStructure");
 
@@ -97,9 +91,11 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
       Node node = allocationElements.item(i);
       if (node.getNodeType() == Node.ELEMENT_NODE) {
         Element allocationElement = (Element) node;
+        //get resource container id
         Element resourceContainerElement = (Element) allocationElement
             .getElementsByTagName("resourceContainer_AllocationContext").item(0);
         String resourceContainerId = resourceContainerElement.getAttribute("href").split("#")[1].substring(1);
+        //get id for composed structure element in system
         Element assemblyElement = (Element) allocationElement
             .getElementsByTagName("assemblyContext_AllocationContext")
             .item(0);
@@ -109,6 +105,7 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
           if (resourceContainer.getId().equals(resourceContainerId)) {
             List<String> componentIds = new ArrayList<>();
             
+            //
             for (int j = 0; j < systemElements.getLength(); j++) {
               Node systemNode = systemElements.item(j);
               Element systemElement = (Element) systemNode;
@@ -141,47 +138,28 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
    *
    * @param repositoryFilePath The path to the repository file.
    * @return Returns a list of components.
-   * @throws ParserConfigurationException
-   * @throws SAXException
-   * @throws IOException
    */
   private List<Component> parseComponents(String repositoryFilePath) {
-    
-    List<Component> componentList = new ArrayList<>();
-    File repositoryXmlFile = new File(repositoryFilePath);
 
-    DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder documentBuilder;
-    try {
-      documentBuilder = documentFactory.newDocumentBuilder();
-      Document xmlDocument = documentBuilder.parse(repositoryXmlFile);
-      xmlDocument.getDocumentElement().normalize();
-      NodeList componentElements = xmlDocument.getElementsByTagName("components__Repository");
-      
-      for (int i = 0; i < componentElements.getLength(); i++) {
-        Node node = componentElements.item(i);
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-          Element element = (Element) node;
-          System.out.println(element.getAttribute("xsi:type"));
-          if (element.getAttribute("xsi:type").equals("repository:BasicComponent")) {
-            String id = element.getAttribute("id");
-            String entityName = element.getAttribute("entityName");
-            Component component = new Component(id, entityName);
-            componentList.add(component);
-          }
+    List<Component> componentList = new ArrayList<>();
+
+    Document xmlDocument = readXmlDocument(repositoryFilePath);
+    NodeList componentElements = xmlDocument.getElementsByTagName("components__Repository");
+
+    for (int i = 0; i < componentElements.getLength(); i++) {
+      Node node = componentElements.item(i);
+      if (node.getNodeType() == Node.ELEMENT_NODE) {
+        Element element = (Element) node;
+        System.out.println(element.getAttribute("xsi:type"));
+        if (element.getAttribute("xsi:type").equals("repository:BasicComponent")) {
+          String id = element.getAttribute("id");
+          String entityName = element.getAttribute("entityName");
+          Component component = new Component(id, entityName);
+          componentList.add(component);
         }
       }
-    } catch (ParserConfigurationException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (SAXException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
     }
-    
+
     return componentList;
   }
 
@@ -189,21 +167,15 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
   /**
    * Parses the resource environment of the c4cbse model.
    * @param resourceEnvironmentFilePath Path to the default.resourceenvironment file.
-   * @return Returns the parsed resource environment containing the linking resources 
-   * and the resource containers
-   * @throws ParserConfigurationException
-   * @throws SAXException
-   * @throws IOException
+   * @return Returns the parsed resource environment containing the linking resources. 
+   * and the resource containers.
    */
   private ResourceEnvironment parseResourceEnvironment(String resourceEnvironmentFilePath)
       throws ParserConfigurationException, SAXException, IOException {
     List<LinkingResource> linkingResources = new ArrayList<>();
     List<ResourceContainer> resourceContainers = new ArrayList<>();
-    File resourceEnvironmentFile = new File(resourceEnvironmentFilePath);
-    DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-    Document xmlDocument = documentBuilder.parse(resourceEnvironmentFile);
-    xmlDocument.getDocumentElement().normalize();
+
+    Document xmlDocument = readXmlDocument(resourceEnvironmentFilePath);
     NodeList resourceElements = xmlDocument
         .getElementsByTagName("resourceContainer_ResourceEnvironment");
     
@@ -249,6 +221,7 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
           Node stereoTypeNode = stereoTypes.item(0);
           Element stereoTypeElement = (Element) stereoTypeNode;
           String propertyType = stereoTypeElement.getAttribute("xsi:type").split(":")[1];
+          //TODO check id
           if (propertyType.equals("Encryption")) {
             linkingResource.addConfidentialityProperty(ConfidentialityProperty.ENCRYPTED);
           }
@@ -321,50 +294,60 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
   @Override
   public void removeProperties(String modelFilePath, 
       List<AbstractArchitectureProperty> violatedProperties) {
-    
-    
+
     List<String> modelFiles = Stream.of(new File(modelFilePath)
         .listFiles()).filter(file -> !file.isDirectory())
         .map(File::getName).collect(Collectors.toList());
     String resourceEnvironmentFileName = 
         findModelSubFileByEnding(modelFiles, ".resourceenvironment");
-    File resourceEnvironmentFile = new File(modelFilePath + resourceEnvironmentFileName);
+    Document xmlDocument = readXmlDocument(modelFilePath + resourceEnvironmentFileName);
+
+    for (int i = 0; i < violatedProperties.size(); i++) {
+      C4CbseLinkingResourceProperty property = 
+          (C4CbseLinkingResourceProperty) violatedProperties.get(i);
+      NodeList stereotypeApplications = xmlDocument.getElementsByTagName("stereotypeApplications");
+      for (int j = 0; j < stereotypeApplications.getLength(); j++) {
+        Element stereotype = (Element) stereotypeApplications.item(j);
+        if (stereotype.getAttribute("appliedTo").equals(property.getLinkingResourceId())
+            && stereotype.getAttribute("xsi:type").split(":")[1].equals("Encryption")
+            && property.getArchitecturePropertyType() == ArchitecturePropertyType.ENCRYPTED) {
+          stereotype.getParentNode().removeChild(stereotype);
+          xmlDocument.normalize();
+          break;
+        }
+      }
+
+    }
+
+    try (FileOutputStream output = new FileOutputStream(
+        modelFilePath + resourceEnvironmentFileName.split("\\.")[0] 
+            + ".coupledresourceenvironment")) {
+      writeXml(xmlDocument, output);
+    } catch (IOException | TransformerException e) {
+      e.printStackTrace();
+    } catch(ParserConfigurationException|SAXException|IOException e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+    }
+  }
+  
+  private Document readXmlDocument(String filePath) {
+    Document xmlDocument = null;
+    File file = new File(filePath);
     DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder documentBuilder;
-    
     try {
       documentBuilder = documentFactory.newDocumentBuilder();
-      Document xmlDocument = documentBuilder.parse(resourceEnvironmentFile);
+      xmlDocument = documentBuilder.parse(file);
       xmlDocument.getDocumentElement().normalize();
-      
-      for (int i = 0; i < violatedProperties.size(); i++) {
-        C4CbseLinkingResourceProperty property = 
-            (C4CbseLinkingResourceProperty) violatedProperties.get(i);
-        NodeList stereotypeApplications = xmlDocument
-            .getElementsByTagName("stereotypeApplications");
-        for (int j = 0; j < stereotypeApplications.getLength(); j++) {
-          Element stereotype = (Element) stereotypeApplications.item(j);
-          if (stereotype.getAttribute("appliedTo").equals(property.getLinkingResourceId())
-              && stereotype.getAttribute("xsi:type").split(":")[1].equals("Encryption")
-              && property.getArchitecturePropertyType() == ArchitecturePropertyType.ENCRYPTED) {
-            stereotype.getParentNode().removeChild(stereotype);
-            xmlDocument.normalize();
-            break;
-          }
-        }
-        
-      }
-      
-      try (FileOutputStream output = new FileOutputStream(modelFilePath 
-            + resourceEnvironmentFileName.split("\\.")[0] + ".coupledresourceenvironment")) {
-        writeXml(xmlDocument, output);
-      } catch (IOException | TransformerException e) {
-        e.printStackTrace();
-      }
-    } catch (ParserConfigurationException | SAXException | IOException e) {
-      // TODO Auto-generated catch block
+    } catch (ParserConfigurationException e) {
+      e.printStackTrace();
+    } catch (SAXException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
       e.printStackTrace();
     }
+    return xmlDocument;
   }
 
   private static void writeXml(Document doc, OutputStream output) throws TransformerException {

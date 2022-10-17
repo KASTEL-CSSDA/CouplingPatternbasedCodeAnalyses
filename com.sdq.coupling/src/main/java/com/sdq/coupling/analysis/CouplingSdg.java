@@ -22,11 +22,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
  * @author Laura
  *
  */
-public class CouplingAnalysisSdg implements ICouplingAnalysis {
-
-  public CouplingAnalysisSdg() {
-
-  }
+public class CouplingSdg implements ICoupling {
 
   /**
    * Determines the violated properties and returns them.

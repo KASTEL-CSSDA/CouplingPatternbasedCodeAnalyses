@@ -1,6 +1,6 @@
 package com.sdq.coupling.ui;
 
-import com.sdq.coupling.Main;
+import com.sdq.coupling.CouplingAnalysis;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -90,7 +90,7 @@ public class UserInterface {
     runButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        Main.run(textFieldModel.getText(), textFieldJar.getText());
+        CouplingAnalysis.run(textFieldModel.getText(), textFieldJar.getText());
       }
     });
 
