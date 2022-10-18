@@ -63,15 +63,13 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
   /**
    * Adds components to their corresponding resource container.
    *
-   * @param resourceEnvironment The resource environment of the c4cbse
-   * model.
-   * @param components The list of components to add.
+   * @param resourceEnvironment       The resource environment of the c4cbse
+   *                                  model.
+   * @param components                The list of components to add.
    * @param allocationContextFilePath Path to the allocation context file of the
-   * c4cbse model, which contains the link between components and resource containers.
-   * @param systemFilePath The file to the system.default file.
-   * @throws ParserConfigurationException 
-   * @throws SAXException
-   * @throws IOException
+   *                                  c4cbse model, which contains the link
+   *                                  between components and resource containers.
+   * @param systemFilePath            The file to the system.default file.
    */
   private void addComponentsToResourceContainers(ResourceEnvironment resourceEnvironment, 
       List<Component> components,
@@ -80,56 +78,48 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
     List<ResourceContainer> resourceContainers = resourceEnvironment.getResourceContainers();
 
     Document allocationXmlDocument = readXmlDocument(allocationContextFilePath);
-    NodeList allocationElements = allocationXmlDocument
-        .getElementsByTagName("allocationContexts_Allocation");
+    List<Element> allocationElements = 
+        getXmlElements("allocationContexts_Allocation", allocationXmlDocument);
 
     Document systemXmlDocument = readXmlDocument(systemFilePath);
-    NodeList systemElements = systemXmlDocument
-        .getElementsByTagName("assemblyContexts__ComposedStructure");
+    List<Element> systemElements = 
+        getXmlElements("assemblyContexts__ComposedStructure", systemXmlDocument);
 
-    for (int i = 0; i < allocationElements.getLength(); i++) {
-      Node node = allocationElements.item(i);
-      if (node.getNodeType() == Node.ELEMENT_NODE) {
-        Element allocationElement = (Element) node;
-        //get resource container id
-        Element resourceContainerElement = (Element) allocationElement
-            .getElementsByTagName("resourceContainer_AllocationContext").item(0);
-        String resourceContainerId = resourceContainerElement.getAttribute("href").split("#")[1].substring(1);
-        //get id for composed structure element in system
-        Element assemblyElement = (Element) allocationElement
-            .getElementsByTagName("assemblyContext_AllocationContext")
-            .item(0);
-        String systemId = assemblyElement.getAttribute("href").split("#")[1];
-        
-        for (ResourceContainer resourceContainer : resourceContainers) {
-          if (resourceContainer.getId().equals(resourceContainerId)) {
-            List<String> componentIds = new ArrayList<>();
-            
-            //
-            for (int j = 0; j < systemElements.getLength(); j++) {
-              Node systemNode = systemElements.item(j);
-              Element systemElement = (Element) systemNode;
-              String assemblyId = systemElement.getAttribute("id");
-              if (systemId.equals(assemblyId)) {
-                Element componentElement = (Element) systemElement
-                    .getElementsByTagName("encapsulatedComponent__AssemblyContext").item(0);
-                String componentId = componentElement.getAttribute("href").split("#")[1];
-                componentIds.add(componentId);
-              }
+    for (Element allocationElement : allocationElements) {
+      // get resource container id
+      Element resourceContainerElement = getFirstChildOfElementByTagName(allocationElement,
+          "resourceContainer_AllocationContext");
+      String resourceContainerId = resourceContainerElement.getAttribute("href").split("#")[1].substring(1);
+      // get id for composed structure element in system
+      Element assemblyElement = 
+          getFirstChildOfElementByTagName(allocationElement, "assemblyContext_AllocationContext");
+      String systemId = assemblyElement.getAttribute("href").split("#")[1];
+
+      for (ResourceContainer resourceContainer : resourceContainers) {
+        if (resourceContainer.getId().equals(resourceContainerId)) {
+          List<String> componentIds = new ArrayList<>();
+
+          //
+          for (Element systemElement : systemElements) {
+            String assemblyId = systemElement.getAttribute("id");
+            if (systemId.equals(assemblyId)) {
+              Element componentElement = getFirstChildOfElementByTagName(systemElement,
+                  "encapsulatedComponent__AssemblyContext");
+              String componentId = componentElement.getAttribute("href").split("#")[1];
+              componentIds.add(componentId);
             }
-
-            for (String componentId : componentIds) {
-              for (Component component : components) {
-                if (component.getId().equals(componentId)) {
-                  resourceContainer.addComponent(component);
-                }
-              }
-            }
-
           }
+
+          for (String componentId : componentIds) {
+            for (Component component : components) {
+              if (component.getId().equals(componentId)) {
+                resourceContainer.addComponent(component);
+              }
+            }
+          }
+
         }
       }
-
     }
   }
 
@@ -176,18 +166,14 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
     List<ResourceContainer> resourceContainers = new ArrayList<>();
 
     Document xmlDocument = readXmlDocument(resourceEnvironmentFilePath);
-    NodeList resourceElements = xmlDocument
-        .getElementsByTagName("resourceContainer_ResourceEnvironment");
+    List<Element> resourceElements = 
+        getXmlElements("resourceContainer_ResourceEnvironment", xmlDocument);
     
-    for (int i = 0; i < resourceElements.getLength(); i++) {
-      Node resourceNode = resourceElements.item(i);
-      if (resourceNode.getNodeType() == Node.ELEMENT_NODE) {
-        Element element = (Element) resourceNode;
-        String id = element.getAttribute("id").substring(1);
-        String entityName = element.getAttribute("entityName");
-        ResourceContainer resourceContainer = new ResourceContainer(id, entityName);
-        resourceContainers.add(resourceContainer);
-      }
+    for (Element element : resourceElements) {
+      String id = element.getAttribute("id").substring(1);
+      String entityName = element.getAttribute("entityName");
+      ResourceContainer resourceContainer = new ResourceContainer(id, entityName);
+      resourceContainers.add(resourceContainer);
     }
     NodeList linkingElements = xmlDocument
         .getElementsByTagName("linkingResources__ResourceEnvironment");
@@ -215,11 +201,9 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
         }
         LinkingResource linkingResource = new LinkingResource(id, entityName, 
             source, target);
-        NodeList stereoTypes = xmlDocument.getElementsByTagName("stereotypeApplications");
+        List<Element> stereoTypes = getXmlElements("stereotypeApplications", xmlDocument);
         
-        for (int i = 0; i < stereoTypes.getLength(); i++) {
-          Node stereoTypeNode = stereoTypes.item(0);
-          Element stereoTypeElement = (Element) stereoTypeNode;
+        for (Element stereoTypeElement: stereoTypes) {
           String propertyType = stereoTypeElement.getAttribute("xsi:type").split(":")[1];
           //TODO check id
           if (propertyType.equals("Encryption")) {
@@ -280,7 +264,6 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
       }
       return propertyList;
     } catch (ParserConfigurationException | SAXException | IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return null;
@@ -302,15 +285,15 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
         findModelSubFileByEnding(modelFiles, ".resourceenvironment");
     Document xmlDocument = readXmlDocument(modelFilePath + resourceEnvironmentFileName);
 
-    for (int i = 0; i < violatedProperties.size(); i++) {
-      C4CbseLinkingResourceProperty property = 
-          (C4CbseLinkingResourceProperty) violatedProperties.get(i);
-      NodeList stereotypeApplications = xmlDocument.getElementsByTagName("stereotypeApplications");
-      for (int j = 0; j < stereotypeApplications.getLength(); j++) {
-        Element stereotype = (Element) stereotypeApplications.item(j);
-        if (stereotype.getAttribute("appliedTo").equals(property.getLinkingResourceId())
+    for (AbstractArchitectureProperty property : violatedProperties) {
+      C4CbseLinkingResourceProperty c4CbseProperty = 
+          (C4CbseLinkingResourceProperty) property;
+      List<Element> stereotypeApplications = 
+          getXmlElements("stereotypeApplications", xmlDocument);
+      for (Element stereotype : stereotypeApplications) {
+        if (stereotype.getAttribute("appliedTo").equals(c4CbseProperty.getLinkingResourceId())
             && stereotype.getAttribute("xsi:type").split(":")[1].equals("Encryption")
-            && property.getArchitecturePropertyType() == ArchitecturePropertyType.ENCRYPTED) {
+            && c4CbseProperty.getArchitecturePropertyType() == ArchitecturePropertyType.ENCRYPTED) {
           stereotype.getParentNode().removeChild(stereotype);
           xmlDocument.normalize();
           break;
@@ -325,10 +308,24 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
       writeXml(xmlDocument, output);
     } catch (IOException | TransformerException e) {
       e.printStackTrace();
-    } catch(ParserConfigurationException|SAXException|IOException e) {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
     }
+  }
+  
+  private Element getFirstChildOfElementByTagName(Element element, String tagName) {
+    return (Element) element.getElementsByTagName(tagName).item(0);
+  }  
+  
+  private List<Element> getXmlElements(String tagName, Document xmlDocument) {
+    List<Element> elements = new ArrayList<>();
+    NodeList nodes = xmlDocument.getElementsByTagName(tagName);
+    for (int index = 0; index < nodes.getLength(); index++) {
+      Node node = nodes.item(index);
+      if (node.getNodeType() == Node.ELEMENT_NODE) {
+        Element element = (Element) node;
+        elements.add(element);
+      }
+    }
+    return elements;
   }
   
   private Document readXmlDocument(String filePath) {
