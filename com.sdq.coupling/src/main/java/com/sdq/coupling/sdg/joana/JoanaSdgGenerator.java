@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Properties;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DirectedPseudograph;
@@ -21,8 +22,10 @@ import com.sdq.coupling.sdg.ISdgGenerator;
  */
 public class JoanaSdgGenerator implements ISdgGenerator {
 
-  public JoanaSdgGenerator() {
-
+  private Properties properties;
+  
+  public JoanaSdgGenerator(Properties properties) {
+    this.properties = properties;
   }
 
   /**
@@ -35,10 +38,10 @@ public class JoanaSdgGenerator implements ISdgGenerator {
   public Graph<AbstractSdgVertex, AbstractSdgEdge> generate(String jarFilePath) {
     try {
       ProcessBuilder pb = new ProcessBuilder(
-          "\"C:\\Program Files\\Eclipse Adoptium\\jdk-8.0.345.1-hotspot\\bin\\java.exe\"", "-jar",
-          ".\\src\\main\\resources\\joana.ui.ifc.wala.cli.jar", "\"classPath " + jarFilePath + "\"",
-          "\"entry select coupling\"", "\"buildSDG\"", "\"exportSDG " 
-          + "./src/main/resources/tmp/sdg.pdg.graphml\"");
+          properties.getProperty("JOANA_JDK_8_PATH"), "-jar",
+          properties.getProperty("JOANA_JAR_PATH"), "\"classPath " + jarFilePath + "\"",
+          properties.getProperty("JOANA_ENTRY_METHOD_TAG"), "\"buildSDG\"", "\"exportSDG " 
+          + properties.getProperty("JOANA_OUTPUT_PATH_DESTINATION"));
       pb.directory(new File(System.getProperty("user.dir")));
 
       System.out.println("Computing SDG (this may take a while) ...");
@@ -53,7 +56,7 @@ public class JoanaSdgGenerator implements ISdgGenerator {
       e.printStackTrace();
     }
 
-    String graphmlFilePath = ".\\src\\main\\resources\\tmp\\sdg.pdg.graphml";
+    String graphmlFilePath = properties.getProperty("JOANA_SDG_PATH");
 
     GraphMLImporter<AbstractSdgVertex, AbstractSdgEdge> gml = 
         new GraphMLImporter<AbstractSdgVertex, AbstractSdgEdge>();

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.cli.ParseException;
 import org.json.JSONArray;
@@ -30,7 +31,10 @@ import fj.data.Array;
  */
 public class CognicryptPatternAnalysis implements IPatternAnalysis {
 
-  public CognicryptPatternAnalysis() {
+  private Properties properties;
+  
+  public CognicryptPatternAnalysis(Properties properties) {
+    this.properties = properties;
   }
 
   /**
@@ -43,9 +47,11 @@ public class CognicryptPatternAnalysis implements IPatternAnalysis {
     List<AbstractPatternViolation> violations = new LinkedList<AbstractPatternViolation>();
     try {
       HeadlessCryptoScanner hcs = HeadlessCryptoScanner
-          .createFromOptions(new String[] { "--rulesDir", ".\\src\\main\\resources\\crypto-rules", 
-              "--applicationCp", jarFilePath, "--reportDir", ".\\src\\main\\resources\\tmp", 
-              "--sarifReport", "" });
+          .createFromOptions(new String[] { "--rulesDir", 
+              properties.getProperty("COGNICRYPT_RULESDIR_PATH"), 
+              "--applicationCp", jarFilePath, "--reportDir", 
+              properties.getProperty("COGNICRYPT_REPORTDIR_PATH"), 
+              properties.getProperty("COGNICRYPT_REPORT_FORMAT"), "" });
       hcs.exec();
 
       // read txt file with result json

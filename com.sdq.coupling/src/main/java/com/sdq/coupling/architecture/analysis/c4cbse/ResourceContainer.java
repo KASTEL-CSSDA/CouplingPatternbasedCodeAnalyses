@@ -42,7 +42,7 @@ public class ResourceContainer {
 
   @Override
   public String toString() {
-    return "Id: " + this.id + "; Name: " + this.entityName;
+    return String.format("Id: %s; Name: %s", this.id, this.entityName);
   }
 
   @Override

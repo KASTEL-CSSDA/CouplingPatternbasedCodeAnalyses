@@ -13,16 +13,20 @@ import com.sdq.coupling.util.Location;
  */
 public class C4CbseLinkingResourceProperty extends AbstractCallArchitectureProperty {
   
-  private String linkingResourceId;
+  private LinkingResource linkingResource;
   
   public C4CbseLinkingResourceProperty(ArchitecturePropertyType architecturePropertyType, 
-      Location caller, Location callee, String linkingResourceId) {
+      Location caller, Location callee, LinkingResource linkingResource) {
     super(architecturePropertyType, caller, callee);
-    this.linkingResourceId = linkingResourceId;
+    this.linkingResource = linkingResource;
+  }
+  
+  public LinkingResource getLinkingResource() {
+    return this.linkingResource;
   }
   
   public String getLinkingResourceId() {
-    return this.linkingResourceId;
+    return this.linkingResource.getId();
   }
 
   @Override

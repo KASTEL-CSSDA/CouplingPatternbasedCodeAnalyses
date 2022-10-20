@@ -16,7 +16,7 @@ import com.sdq.coupling.sdg.AbstractSdgVertex;
  * @author Laura
  *
  */
-public interface ICoupling {
+public interface ICouplingAnalysis {
   
   /**
    * Determines which architecture properties are violated by the code

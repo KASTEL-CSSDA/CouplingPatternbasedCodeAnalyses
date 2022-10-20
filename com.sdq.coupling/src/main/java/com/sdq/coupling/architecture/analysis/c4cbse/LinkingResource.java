@@ -60,8 +60,8 @@ public class LinkingResource {
 
   @Override
   public String toString() {
-    return "Id: " + this.id + "; Name: " + this.entityName 
-        + "; Source: " + this.source + "; Target: " + this.target;
+    return String.format("Id: %s; Name: %s; Source: %s; Target: %s", this.id, this.entityName,
+        this.source, this.target);
   }
 
   @Override

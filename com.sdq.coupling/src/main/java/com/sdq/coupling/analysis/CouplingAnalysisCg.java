@@ -16,7 +16,7 @@ import com.sdq.coupling.sdg.AbstractSdgVertex;
  * @author Laura
  *
  */
-public class CouplingCg implements ICoupling {
+public class CouplingAnalysisCg implements ICouplingAnalysis {
 
   /**
    * Determines the violated properties and returns them.

@@ -251,14 +251,16 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
         }
         for (Component sourceComponent : linkingResource.getSource().getComponents()) {
           for (Component targetComponent : linkingResource.getTarget().getComponents()) {
+            String targetName = targetComponent.getEntityName();
+            String sourceName = sourceComponent.getEntityName();
             propertyList.add(new C4CbseLinkingResourceProperty(ArchitecturePropertyType
-                .ENCRYPTED, new Location(sourceComponent.getEntityName()), 
-                new Location(targetComponent.getEntityName()), 
-                linkingResource.getId()));
+                .ENCRYPTED, new Location(sourceName), 
+                new Location(targetName), 
+                linkingResource));
             propertyList.add(new C4CbseLinkingResourceProperty(ArchitecturePropertyType.ENCRYPTED,
-                new Location(targetComponent.getEntityName()), 
-                new Location(sourceComponent.getEntityName()),
-                linkingResource.getId()));
+                new Location(targetName), 
+                new Location(sourceName),
+                linkingResource));
           }
         }
       }
@@ -302,9 +304,13 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
 
     }
 
-    try (FileOutputStream output = new FileOutputStream(
-        modelFilePath + resourceEnvironmentFileName.split("\\.")[0] 
-            + ".coupledresourceenvironment")) {
+    try {
+      File outputFile = new File(
+          modelFilePath + "result\\" + resourceEnvironmentFileName.split("\\.")[0] + "_coupled"
+              + ".resourceenvironment");
+      outputFile.getParentFile().mkdirs();
+      outputFile.createNewFile();
+      FileOutputStream output = new FileOutputStream(outputFile, false); 
       writeXml(xmlDocument, output);
     } catch (IOException | TransformerException e) {
       e.printStackTrace();

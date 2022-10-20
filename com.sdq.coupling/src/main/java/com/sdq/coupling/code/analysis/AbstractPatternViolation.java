@@ -58,8 +58,8 @@ public abstract class AbstractPatternViolation {
 
   @Override
   public String toString() {
-    return "{PatternViolation (" + this.getViolationType() + "): errorMethod=" 
-      + this.errorMethod.toString() + ", violatedMethod=" + this.violatedMethod.toString() 
-      + ", lines=" + this.affectedLines.toString() + "}";
+    return String.format("{PatternViolation (%s): errorMethod=%s, violatedMethod=%s, lines=%s}", 
+        this.getViolationType(), this.errorMethod.toString(), this.violatedMethod.toString(),
+        this.affectedLines.toString());
   }
 }

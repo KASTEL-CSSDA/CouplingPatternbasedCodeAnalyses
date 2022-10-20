@@ -22,7 +22,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
  * @author Laura
  *
  */
-public class CouplingSdg implements ICoupling {
+public class CouplingAnalysisSdg implements ICouplingAnalysis {
 
   /**
    * Determines the violated properties and returns them.
@@ -49,8 +49,8 @@ public class CouplingSdg implements ICoupling {
   }
 
   /**
-   * Maps the on the architecture model defined properties to the corresponding 
-   * sdg vertices and returns them.
+   * Checks the type of the properties an calls the corresponding method to assign the
+   * property.
    *
    * @param architecturePropertyList The architecture properties to map.
    * @param sdg The sdg that represents the analyzed jar file.
