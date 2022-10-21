@@ -91,7 +91,6 @@ public class CouplingAnalysisSdg implements ICouplingAnalysis {
 
       if (vertex.getVertexType() != null && vertex.getVertexType().equals(SdgVertexType.CALL)
           && vertex.getLocation() != null && callProperty.isCaller(vertex.getLocation())) {
-        System.out.println("Found match: " + vertex.getLocation());
         // get edges from call vertex to other vertices
         Set<AbstractSdgEdge> outgoingEdges = sdg.outgoingEdgesOf(vertex);
 

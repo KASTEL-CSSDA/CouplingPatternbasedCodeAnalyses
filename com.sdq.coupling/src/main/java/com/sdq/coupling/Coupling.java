@@ -1,14 +1,6 @@
 package com.sdq.coupling;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import java.util.List;
-import java.util.Properties;
-
-import org.jgrapht.Graph;
-
+import com.sdq.coupling.analysis.CouplingAnalysisCg;
 import com.sdq.coupling.analysis.CouplingAnalysisSdg;
 import com.sdq.coupling.analysis.ICouplingAnalysis;
 import com.sdq.coupling.architecture.analysis.AbstractArchitectureProperty;
@@ -24,6 +16,13 @@ import com.sdq.coupling.sdg.AbstractSdgVertex;
 import com.sdq.coupling.sdg.ISdgGenerator;
 import com.sdq.coupling.sdg.joana.JoanaSdgGenerator;
 import com.sdq.coupling.ui.UserInterface;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
+import org.jgrapht.Graph;
+
 
 /**
  * Runs the analysis.
@@ -62,10 +61,13 @@ public class Coupling {
     AbstractPropertyViolationMapping mapping = new C4CbseCognicryptMapping(); 
 
     // (5) Find violated properties.
-    ICouplingAnalysis ca = new CouplingAnalysisSdg();
+    //ICouplingAnalysis ca = new CouplingAnalysisSdg();
+    ICouplingAnalysis couplingAnalysis = new CouplingAnalysisCg();
     List<AbstractArchitectureProperty> violatedProperties = 
-        ca.getViolatedProperties(architectureProperties, patternViolations, sdg, mapping);
-    System.out.println("Found " + violatedProperties.size() + " violated properties.\n");
+        couplingAnalysis.getViolatedProperties(architectureProperties, 
+            patternViolations, sdg, mapping);
+    System.out.println("Found " + violatedProperties == null ? "0" : violatedProperties.size() 
+        + " violated properties.\n");
 
     // (6) Remove the properties that are violated.
     architecturePropertyManager.removeProperties(modelDirectoryPath, violatedProperties);
