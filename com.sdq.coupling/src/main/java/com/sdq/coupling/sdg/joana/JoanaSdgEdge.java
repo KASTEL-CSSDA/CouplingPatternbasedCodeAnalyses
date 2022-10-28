@@ -40,6 +40,9 @@ public class JoanaSdgEdge extends AbstractSdgEdge {
       case "CL":
         this.setEdgeType(SdgEdgeType.CL);
         break;
+      case "CF":
+        this.setEdgeType(SdgEdgeType.CF);
+        break;
       default:
         this.setEdgeType(SdgEdgeType.UNSPECIFIED);
         break;

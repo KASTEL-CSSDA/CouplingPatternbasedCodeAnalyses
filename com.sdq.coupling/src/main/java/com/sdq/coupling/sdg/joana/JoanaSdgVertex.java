@@ -59,6 +59,9 @@ public class JoanaSdgVertex extends AbstractSdgVertex {
       case "ACTO":
         this.setVertexType(SdgVertexType.ACTO);
         break;
+      case "NORM":
+        this.setVertexType(SdgVertexType.NORM);
+        break;
       default:
         this.setVertexType(SdgVertexType.UNSPECIFIED);
         break;

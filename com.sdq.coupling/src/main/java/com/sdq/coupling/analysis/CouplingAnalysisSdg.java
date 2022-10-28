@@ -9,6 +9,8 @@ import com.sdq.coupling.sdg.AbstractSdgVertex;
 import com.sdq.coupling.sdg.SdgEdgeType;
 import com.sdq.coupling.sdg.SdgVertexType;
 import com.sdq.coupling.sdg.joana.JoanaSdgEdge;
+import com.sdq.coupling.sdg.joana.JoanaSdgVertex;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -173,7 +175,9 @@ public class CouplingAnalysisSdg implements ICouplingAnalysis {
    * @param sdg The sdg that represents the analyzed jar file.
    */
   private void cleanUpSdgForMapping(Graph<AbstractSdgVertex, AbstractSdgEdge> sdg) {
+    // THIS IS SPECIFIC TO JOANA, maybe move somewhere else in the future
     Set<AbstractSdgEdge> edges = sdg.edgeSet();
+    Set<AbstractSdgVertex> vertices = sdg.vertexSet();
     List<AbstractSdgEdge> edgesToRemove = new LinkedList<AbstractSdgEdge>();
     List<AbstractSdgEdge> edgesToFlip = new LinkedList<AbstractSdgEdge>();
     for (AbstractSdgEdge edge : edges) {
@@ -184,6 +188,25 @@ public class CouplingAnalysisSdg implements ICouplingAnalysis {
         }
       } else if (!edge.getEdgeType().equals(SdgEdgeType.DD)) {
         edgesToRemove.add(edge);
+      }
+    }
+    
+    for (AbstractSdgVertex vertex : vertices) {
+      if (vertex.getVertexType() == SdgVertexType.NORM) {
+        JoanaSdgVertex joanaVertex = (JoanaSdgVertex) vertex;
+        
+        if (joanaVertex.getNodeOperation().equals("declaration")) {
+          String variableName = joanaVertex.getNodeLabel().split(" =")[0];
+          for (AbstractSdgVertex possibleCallVertex : vertices) {
+            JoanaSdgVertex joanaCallVertex = (JoanaSdgVertex) possibleCallVertex;
+            String callVariableName = joanaCallVertex.getNodeLabel().split("\\.")[0];
+            if (possibleCallVertex.getVertexType() == SdgVertexType.CALL &&
+                callVariableName.equals(variableName)) {
+              AbstractSdgEdge edge = sdg.addEdge(possibleCallVertex, vertex);
+              edge.setEdgeType(SdgEdgeType.DD);
+            }
+          }
+        }
       }
     }
 

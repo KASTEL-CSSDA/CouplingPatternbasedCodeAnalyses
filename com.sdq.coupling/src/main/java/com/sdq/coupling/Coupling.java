@@ -62,7 +62,7 @@ public class Coupling {
 
     // (5) Find violated properties.
     //ICouplingAnalysis ca = new CouplingAnalysisSdg();
-    ICouplingAnalysis couplingAnalysis = new CouplingAnalysisCg();
+    ICouplingAnalysis couplingAnalysis = new CouplingAnalysisSdg();
     List<AbstractArchitectureProperty> violatedProperties = 
         couplingAnalysis.getViolatedProperties(architectureProperties, 
             patternViolations, sdg, mapping);

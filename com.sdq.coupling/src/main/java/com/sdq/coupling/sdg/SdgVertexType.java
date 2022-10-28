@@ -11,5 +11,6 @@ public enum SdgVertexType {
   ENTR, // METHOD ENTRY
   ACTI, // ACT_IN
   ACTO, // ACT_OUT
+  NORM, // NORM
   UNSPECIFIED
 }
