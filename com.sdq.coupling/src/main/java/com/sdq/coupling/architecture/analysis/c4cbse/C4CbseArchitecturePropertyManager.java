@@ -203,10 +203,11 @@ public class C4CbseArchitecturePropertyManager implements IArchitecturePropertyM
             source, target);
         List<Element> stereoTypes = getXmlElements("stereotypeApplications", xmlDocument);
         
-        for (Element stereoTypeElement: stereoTypes) {
+        for (Element stereoTypeElement : stereoTypes) {
           String propertyType = stereoTypeElement.getAttribute("xsi:type").split(":")[1];
+          String appliedToId = stereoTypeElement.getAttribute("appliedTo");
           //TODO check id
-          if (propertyType.equals("Encryption")) {
+          if (propertyType.equals("Encryption") && id.equals(appliedToId)) {
             linkingResource.addConfidentialityProperty(ConfidentialityProperty.ENCRYPTED);
           }
         }
