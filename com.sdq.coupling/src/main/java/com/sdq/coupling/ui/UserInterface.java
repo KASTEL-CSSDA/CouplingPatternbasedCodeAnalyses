@@ -66,7 +66,7 @@ public class UserInterface {
     Container jarContainer = new Container();
     jarContainer.setLayout(new GridLayout(0, 3, 5, 0));
     final JLabel labelSelectJar = new JLabel("JAR File:");
-    final JTextField textFieldJar = new JTextField("./example/example.jar");
+    final JTextField textFieldJar = new JTextField("./example/TravelPlannerPCM.jar");
     final JButton buttonSelectJar = new JButton("Select");
     buttonSelectJar.addActionListener(new ActionListener() {
       @Override
@@ -86,18 +86,29 @@ public class UserInterface {
     jarContainer.add(buttonSelectJar);
 
     // run button
-    final JButton runButton = new JButton("Run Coupling Analysis");
-    runButton.addActionListener(new ActionListener() {
+    Container runContainer = new Container();
+    runContainer.setLayout(new GridLayout(0, 2, 5, 0));
+    final JButton runSdgButton = new JButton("Run SDG Coupling Analysis");
+    runSdgButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        Coupling.run(textFieldModel.getText(), textFieldJar.getText());
+        Coupling.run(textFieldModel.getText(), textFieldJar.getText(), false);
       }
     });
+    final JButton runCgButton = new JButton("Run CG Coupling Analysis");
+    runCgButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        Coupling.run(textFieldModel.getText(), textFieldJar.getText(), true);
+      }
+    });
+    runContainer.add(runSdgButton);
+    runContainer.add(runCgButton);
 
     // add all ui elements
     contentPane.add(modelContainer);
     contentPane.add(jarContainer);
-    contentPane.add(runButton);
+    contentPane.add(runContainer);
 
     // make frame appear centered on screen
 

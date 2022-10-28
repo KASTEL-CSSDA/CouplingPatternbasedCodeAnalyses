@@ -38,7 +38,7 @@ public class Coupling {
    * @param modelDirectoryPath Path to the architecture model.
    * @param jarFilePath Path to the analyzed jar file.
    */
-  public static void run(String modelDirectoryPath, String jarFilePath) {
+  public static void run(String modelDirectoryPath, String jarFilePath, boolean useCgCoupling) {
     Properties properties = loadProperties();
     // (1) Extract architecture security properties.
     IArchitecturePropertyManager architecturePropertyManager = 
@@ -62,7 +62,15 @@ public class Coupling {
 
     // (5) Find violated properties.
     //ICouplingAnalysis ca = new CouplingAnalysisSdg();
-    ICouplingAnalysis couplingAnalysis = new CouplingAnalysisSdg();
+    ICouplingAnalysis couplingAnalysis;
+    if (useCgCoupling) {
+      System.out.println("Running coupling analysis with CG ...");
+      couplingAnalysis = new CouplingAnalysisCg();
+    } else {
+      System.out.println("Running coupling analysis with SDG ...");
+      couplingAnalysis = new CouplingAnalysisSdg();
+    }
+    
     List<AbstractArchitectureProperty> violatedProperties = 
         couplingAnalysis.getViolatedProperties(architectureProperties, 
             patternViolations, sdg, mapping);
