@@ -97,6 +97,12 @@
       <extension href="../../plugin/edu.kit.kastel.scbs.pcmconfidentialityprofile/confidentiality.emfprofile_diagram#_58XAAIOkEeW0_uLqifoM5g"/>
       <locationsAndTamperProtectionsPairs href="default.confidentiality#_DQX6vFhaEe2me-_nmjN5cA"/>
     </stereotypeApplications>
+    <stereotypeApplications xsi:type="edu.kit.kastel.scbs.pcmconfidentialityprofile:Encryption" appliedTo="_67lcMMN9EeWPE-QAhbUzuQ">
+      <extension href="../../plugin/edu.kit.kastel.scbs.pcmconfidentialityprofile/confidentiality.emfprofile_diagram#_7R9hAIOkEeW0_uLqifoM5g"/>
+    </stereotypeApplications>
+    <stereotypeApplications xsi:type="edu.kit.kastel.scbs.pcmconfidentialityprofile:Encryption" appliedTo="_1XdFQMN9EeWPE-QAhbUzuQ">
+      <extension href="../../plugin/edu.kit.kastel.scbs.pcmconfidentialityprofile/confidentiality.emfprofile_diagram#_7R9hAIOkEeW0_uLqifoM5g"/>
+    </stereotypeApplications>
     <importedProfiles nsURI="http://edu.kit.kastel.scbs/pcmconfidentialityprofile" location="platform:/plugin/edu.kit.kastel.scbs.pcmconfidentialityprofile/confidentiality.emfprofile_diagram"/>
   </emfprofileapplication:ProfileApplication>
 </xmi:XMI>
