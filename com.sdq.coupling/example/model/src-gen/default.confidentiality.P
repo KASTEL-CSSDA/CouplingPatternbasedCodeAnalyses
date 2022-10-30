@@ -1,0 +1,341 @@
+
+/** BEGIN confidentialitySpecification, ID: '1', NAME: 'null' */
+description(1,'null','confidentialitySpecification').
+confidentialitySpecification(1).
+dataIdentifier(1,[2,3,4,5,6,7,8,9]).
+dataSetMaps(1,[]).
+parametersAndDataPairs(1,[10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]).
+addedServiceParameters(1,[]).
+specificationParameterAssignments(1,[]).
+specificationParameterEquations(1,[]).
+locations(1,[29,30,31,32,33,34,35]).
+tamperProtections(1,[36,37]).
+locationsAndTamperProtectionsPairs(1,[38,39,40,41,42,43,44,45,46]).
+
+/** BEGIN dataSet, ID: '2', NAME: 'CreditCardInformation' */
+description(2,'CreditCardInformation','dataSet').
+dataSet(2).
+/** END dataSet, ID: '2', NAME: 'CreditCardInformation' */
+
+
+/** BEGIN dataSet, ID: '3', NAME: 'TravelData' */
+description(3,'TravelData','dataSet').
+dataSet(3).
+/** END dataSet, ID: '3', NAME: 'TravelData' */
+
+
+/** BEGIN dataSet, ID: '4', NAME: 'CreditCardInformationDeclassified' */
+description(4,'CreditCardInformationDeclassified','dataSet').
+dataSet(4).
+/** END dataSet, ID: '4', NAME: 'CreditCardInformationDeclassified' */
+
+
+/** BEGIN dataSet, ID: '5', NAME: 'FlightOffer' */
+description(5,'FlightOffer','dataSet').
+dataSet(5).
+/** END dataSet, ID: '5', NAME: 'FlightOffer' */
+
+
+/** BEGIN dataSet, ID: '6', NAME: 'Selection' */
+description(6,'Selection','dataSet').
+dataSet(6).
+/** END dataSet, ID: '6', NAME: 'Selection' */
+
+
+/** BEGIN dataSet, ID: '7', NAME: 'TechnicalSupportInformation' */
+description(7,'TechnicalSupportInformation','dataSet').
+dataSet(7).
+/** END dataSet, ID: '7', NAME: 'TechnicalSupportInformation' */
+
+
+/** BEGIN dataSet, ID: '8', NAME: 'Comissioning' */
+description(8,'Comissioning','dataSet').
+dataSet(8).
+/** END dataSet, ID: '8', NAME: 'Comissioning' */
+
+
+/** BEGIN dataSet, ID: '9', NAME: 'UserDetails' */
+description(9,'UserDetails','dataSet').
+dataSet(9).
+/** END dataSet, ID: '9', NAME: 'UserDetails' */
+
+
+/** BEGIN parametersAndDataPair, ID: '10', NAME: 'RETURN2CreditcardinformationdeclassifiedFlightofferSelectionTraveldata' */
+description(10,'RETURN2CreditcardinformationdeclassifiedFlightofferSelectionTraveldata','parametersAndDataPair').
+parametersAndDataPair(10).
+parameterSources(10,[return]).
+dataTargets(10,[4,5,6,3]).
+/** END parametersAndDataPair, ID: '10', NAME: 'RETURN2CreditcardinformationdeclassifiedFlightofferSelectionTraveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '11', NAME: 'Requestdata2Traveldata' */
+description(11,'Requestdata2Traveldata','parametersAndDataPair').
+parametersAndDataPair(11).
+parameterSources(11,[47]).
+dataTargets(11,[3]).
+/** END parametersAndDataPair, ID: '11', NAME: 'Requestdata2Traveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '12', NAME: 'Flights2Flightoffer' */
+description(12,'Flights2Flightoffer','parametersAndDataPair').
+parametersAndDataPair(12).
+parameterSources(12,[48]).
+dataTargets(12,[5]).
+/** END parametersAndDataPair, ID: '12', NAME: 'Flights2Flightoffer' */
+
+
+/** BEGIN parametersAndDataPair, ID: '13', NAME: 'Flightoffers2Flightoffer' */
+description(13,'Flightoffers2Flightoffer','parametersAndDataPair').
+parametersAndDataPair(13).
+parameterSources(13,[49]).
+dataTargets(13,[5]).
+/** END parametersAndDataPair, ID: '13', NAME: 'Flightoffers2Flightoffer' */
+
+
+/** BEGIN parametersAndDataPair, ID: '14', NAME: 'Requestdata2Traveldata' */
+description(14,'Requestdata2Traveldata','parametersAndDataPair').
+parametersAndDataPair(14).
+parameterSources(14,[47]).
+dataTargets(14,[3]).
+/** END parametersAndDataPair, ID: '14', NAME: 'Requestdata2Traveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '15', NAME: 'Flightoffer2SelectionFlightofferTraveldata' */
+description(15,'Flightoffer2SelectionFlightofferTraveldata','parametersAndDataPair').
+parametersAndDataPair(15).
+parameterSources(15,[50]).
+dataTargets(15,[6,5,3]).
+/** END parametersAndDataPair, ID: '15', NAME: 'Flightoffer2SelectionFlightofferTraveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '16', NAME: 'Ccd2Creditcardinformation' */
+description(16,'Ccd2Creditcardinformation','parametersAndDataPair').
+parametersAndDataPair(16).
+parameterSources(16,[51]).
+dataTargets(16,[2]).
+/** END parametersAndDataPair, ID: '16', NAME: 'Ccd2Creditcardinformation' */
+
+
+/** BEGIN parametersAndDataPair, ID: '17', NAME: 'Ccd2Creditcardinformation' */
+description(17,'Ccd2Creditcardinformation','parametersAndDataPair').
+parametersAndDataPair(17).
+parameterSources(17,[51]).
+dataTargets(17,[2]).
+/** END parametersAndDataPair, ID: '17', NAME: 'Ccd2Creditcardinformation' */
+
+
+/** BEGIN parametersAndDataPair, ID: '18', NAME: 'Airline2FlightofferSelectionTraveldata' */
+description(18,'Airline2FlightofferSelectionTraveldata','parametersAndDataPair').
+parametersAndDataPair(18).
+parameterSources(18,[52]).
+dataTargets(18,[5,6,3]).
+/** END parametersAndDataPair, ID: '18', NAME: 'Airline2FlightofferSelectionTraveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '19', NAME: 'Offerid2FlightofferSelectionTraveldata' */
+description(19,'Offerid2FlightofferSelectionTraveldata','parametersAndDataPair').
+parametersAndDataPair(19).
+parameterSources(19,[53]).
+dataTargets(19,[5,6,3]).
+/** END parametersAndDataPair, ID: '19', NAME: 'Offerid2FlightofferSelectionTraveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '20', NAME: 'Ccd_decl2Creditcardinformationdeclassified' */
+description(20,'Ccd_decl2Creditcardinformationdeclassified','parametersAndDataPair').
+parametersAndDataPair(20).
+parameterSources(20,[54]).
+dataTargets(20,[4]).
+/** END parametersAndDataPair, ID: '20', NAME: 'Ccd_decl2Creditcardinformationdeclassified' */
+
+
+/** BEGIN parametersAndDataPair, ID: '21', NAME: 'Requestdata2Traveldata' */
+description(21,'Requestdata2Traveldata','parametersAndDataPair').
+parametersAndDataPair(21).
+parameterSources(21,[47]).
+dataTargets(21,[3]).
+/** END parametersAndDataPair, ID: '21', NAME: 'Requestdata2Traveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '22', NAME: 'RETURN2FlightofferTraveldata' */
+description(22,'RETURN2FlightofferTraveldata','parametersAndDataPair').
+parametersAndDataPair(22).
+parameterSources(22,[return]).
+dataTargets(22,[5,3]).
+/** END parametersAndDataPair, ID: '22', NAME: 'RETURN2FlightofferTraveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '23', NAME: 'Airline2FlightofferSelectionTraveldata' */
+description(23,'Airline2FlightofferSelectionTraveldata','parametersAndDataPair').
+parametersAndDataPair(23).
+parameterSources(23,[52]).
+dataTargets(23,[5,6,3]).
+/** END parametersAndDataPair, ID: '23', NAME: 'Airline2FlightofferSelectionTraveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '24', NAME: 'call2Traveldata' */
+description(24,'call2Traveldata','parametersAndDataPair').
+parametersAndDataPair(24).
+parameterSources(24,[call]).
+dataTargets(24,[3]).
+/** END parametersAndDataPair, ID: '24', NAME: 'call2Traveldata' */
+
+
+/** BEGIN parametersAndDataPair, ID: '25', NAME: 'ValueAirline2Comissioning' */
+description(25,'ValueAirline2Comissioning','parametersAndDataPair').
+parametersAndDataPair(25).
+parameterSources(25,[55,52]).
+dataTargets(25,[8]).
+/** END parametersAndDataPair, ID: '25', NAME: 'ValueAirline2Comissioning' */
+
+
+/** BEGIN parametersAndDataPair, ID: '26', NAME: 'EntryCALLRETURNSizeof(*)2Technicalsupportinformation' */
+description(26,'EntryCALLRETURNSizeof(*)2Technicalsupportinformation','parametersAndDataPair').
+parametersAndDataPair(26).
+parameterSources(26,[56,call,return,sizeOf(*)]).
+dataTargets(26,[7]).
+/** END parametersAndDataPair, ID: '26', NAME: 'EntryCALLRETURNSizeof(*)2Technicalsupportinformation' */
+
+
+/** BEGIN parametersAndDataPair, ID: '27', NAME: 'Password2Userdetails' */
+description(27,'Password2Userdetails','parametersAndDataPair').
+parametersAndDataPair(27).
+parameterSources(27,[57]).
+dataTargets(27,[9]).
+/** END parametersAndDataPair, ID: '27', NAME: 'Password2Userdetails' */
+
+
+/** BEGIN parametersAndDataPair, ID: '28', NAME: 'Name2Traveldata' */
+description(28,'Name2Traveldata','parametersAndDataPair').
+parametersAndDataPair(28).
+parameterSources(28,[58]).
+dataTargets(28,[3]).
+/** END parametersAndDataPair, ID: '28', NAME: 'Name2Traveldata' */
+
+
+/** BEGIN location, ID: '29', NAME: 'TravelAgency' */
+description(29,'TravelAgency','location').
+location(29).
+/** END location, ID: '29', NAME: 'TravelAgency' */
+
+
+/** BEGIN location, ID: '30', NAME: 'Airline' */
+description(30,'Airline','location').
+location(30).
+/** END location, ID: '30', NAME: 'Airline' */
+
+
+/** BEGIN location, ID: '31', NAME: 'UserControlled' */
+description(31,'UserControlled','location').
+location(31).
+/** END location, ID: '31', NAME: 'UserControlled' */
+
+
+/** BEGIN location, ID: '32', NAME: 'Internet' */
+description(32,'Internet','location').
+location(32).
+/** END location, ID: '32', NAME: 'Internet' */
+
+
+/** BEGIN location, ID: '33', NAME: 'CoffeShop' */
+description(33,'CoffeShop','location').
+location(33).
+/** END location, ID: '33', NAME: 'CoffeShop' */
+
+
+/** BEGIN location, ID: '34', NAME: 'Street' */
+description(34,'Street','location').
+location(34).
+/** END location, ID: '34', NAME: 'Street' */
+
+
+/** BEGIN location, ID: '35', NAME: 'SupportCenter' */
+description(35,'SupportCenter','location').
+location(35).
+/** END location, ID: '35', NAME: 'SupportCenter' */
+
+
+/** BEGIN tamperProtection, ID: '36', NAME: 'SUPERSECURE' */
+description(36,'SUPERSECURE','tamperProtection').
+tamperProtection(36).
+/** END tamperProtection, ID: '36', NAME: 'SUPERSECURE' */
+
+
+/** BEGIN tamperProtection, ID: '37', NAME: 'WEAK' */
+description(37,'WEAK','tamperProtection').
+tamperProtection(37).
+/** END tamperProtection, ID: '37', NAME: 'WEAK' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '38', NAME: 'l=[Airline] - t=[]' */
+description(38,'l=[Airline] - t=[]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(38).
+locations(38,[30]).
+tamperProtections(38,[]).
+/** END locationsAndTamperProtectionsPair, ID: '38', NAME: 'l=[Airline] - t=[]' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '39', NAME: 'l=[TravelAgency] - t=[]' */
+description(39,'l=[TravelAgency] - t=[]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(39).
+locations(39,[29]).
+tamperProtections(39,[]).
+/** END locationsAndTamperProtectionsPair, ID: '39', NAME: 'l=[TravelAgency] - t=[]' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '40', NAME: 'l=[UserControlled] - t=[]' */
+description(40,'l=[UserControlled] - t=[]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(40).
+locations(40,[31]).
+tamperProtections(40,[]).
+/** END locationsAndTamperProtectionsPair, ID: '40', NAME: 'l=[UserControlled] - t=[]' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '41', NAME: 'l=[CoffeShop] - t=[]' */
+description(41,'l=[CoffeShop] - t=[]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(41).
+locations(41,[33]).
+tamperProtections(41,[]).
+/** END locationsAndTamperProtectionsPair, ID: '41', NAME: 'l=[CoffeShop] - t=[]' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '42', NAME: 'l=[Street] - t=[]' */
+description(42,'l=[Street] - t=[]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(42).
+locations(42,[34]).
+tamperProtections(42,[]).
+/** END locationsAndTamperProtectionsPair, ID: '42', NAME: 'l=[Street] - t=[]' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '43', NAME: 'l=[Internet] - t=[SUPERSECURE]' */
+description(43,'l=[Internet] - t=[SUPERSECURE]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(43).
+locations(43,[32]).
+tamperProtections(43,[36]).
+/** END locationsAndTamperProtectionsPair, ID: '43', NAME: 'l=[Internet] - t=[SUPERSECURE]' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '44', NAME: 'l=[SupportCenter] - t=[]' */
+description(44,'l=[SupportCenter] - t=[]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(44).
+locations(44,[35]).
+tamperProtections(44,[]).
+/** END locationsAndTamperProtectionsPair, ID: '44', NAME: 'l=[SupportCenter] - t=[]' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '45', NAME: 'l=[Internet] - t=[WEAK]' */
+description(45,'l=[Internet] - t=[WEAK]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(45).
+locations(45,[32]).
+tamperProtections(45,[37]).
+/** END locationsAndTamperProtectionsPair, ID: '45', NAME: 'l=[Internet] - t=[WEAK]' */
+
+
+/** BEGIN locationsAndTamperProtectionsPair, ID: '46', NAME: 'l=[Internet] - t=[]' */
+description(46,'l=[Internet] - t=[]','locationsAndTamperProtectionsPair').
+locationsAndTamperProtectionsPair(46).
+locations(46,[32]).
+tamperProtections(46,[]).
+/** END locationsAndTamperProtectionsPair, ID: '46', NAME: 'l=[Internet] - t=[]' */
+
+/** END confidentialitySpecification, ID: '1', NAME: 'null' */
+
