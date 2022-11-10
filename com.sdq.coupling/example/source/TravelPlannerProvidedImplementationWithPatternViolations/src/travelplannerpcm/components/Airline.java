@@ -102,12 +102,6 @@ public class Airline implements FlightOffers, Booking, AirlineAdministration {
 	
 	public void setAvailableFlights(Iterable<FlightOffer> flights) {
 		this.offers = (Set<FlightOffer>) flights;
-		try {
-          Cipher c = Cipher.getInstance("ABC");
-          c.doFinal(new byte[0]);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
-            e.printStackTrace();
-        }
 	}
 
 	public void setCommission(Comission comission) {
@@ -125,6 +119,13 @@ public class Airline implements FlightOffers, Booking, AirlineAdministration {
 		if (donePB) {
 			doPayC = true;
 		}
+		
+        try {
+          Cipher c = Cipher.getInstance("ABC");
+          c.doFinal(new byte[0]);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        }
 
 		return donePB;
 	}
