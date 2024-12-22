@@ -137,9 +137,8 @@ public class CognicryptPatternAnalysis implements IPatternAnalysis {
 
       // TODO: clear tmp folder
 
-    } catch (ClassNotFoundException | NoSuchMethodException | SecurityException 
-        | IllegalAccessException | IllegalArgumentException | InvocationTargetException 
-        | ParseException | IOException e) {
+    } catch (SecurityException 
+        | IllegalArgumentException | IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }

@@ -1,11 +1,14 @@
 package travelplannerpcm.components;
 
 
+
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 
 import travelplannerpcm.datatypes.CreditCardDetails;
@@ -49,23 +52,27 @@ public class TravelPlanner implements BookingSelection, DeclassificationReceiver
 
 	@Override
 	public void declassifiedCCD(CreditCardDetails details) {
-	    byte[] plainCreditCardNumber = details.getCreditCardNumberAsBytes();
+		byte[] plainCreditCardNumber = details.getCreditCardNumberAsBytes();
 	    byte[] plainLastDigits = details.getLastDigitsAsBytes();
 	    byte[] plainProvider = details.getProviderAsBytes();
 	    byte[] encryptedCreditCardNumber = new byte[0];
 	    byte[] encryptedLastDigits = new byte[0];
 	    byte[] encryptedProvider = new byte[0];
-	    
-	    Cipher c = null;
+		
+       
+	    Cipher cipher = null;
         try {
-          c = Cipher.getInstance("ABC");
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+        	KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+            keyGen.init(56); // DES uses a 56-bit key size
+        	cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.ENCRYPT_MODE, keyGen.generateKey());
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
           e.printStackTrace();
         }
 	    try {
-	      encryptedCreditCardNumber = c.doFinal(plainCreditCardNumber);
-          encryptedLastDigits = c.doFinal(plainLastDigits);
-          encryptedProvider = c.doFinal(plainProvider);
+	      encryptedCreditCardNumber = cipher.doFinal(plainCreditCardNumber);
+          encryptedLastDigits = cipher.doFinal(plainLastDigits);
+          encryptedProvider = cipher.doFinal(plainProvider);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
           e.printStackTrace();
         }

@@ -1,6 +1,8 @@
 package travelplannerpcm.components;
 
 import java.lang.Iterable;
+
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +12,11 @@ import java.util.Set;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
 import travelplannerpcm.datatypes.AirlineSpec;
 import travelplannerpcm.datatypes.CreditCardDetails;
@@ -88,10 +94,13 @@ public class Airline implements FlightOffers, Booking, AirlineAdministration {
 	if (doPayC) {
 			int offerPrice = offers.stream().filter(offer -> offer.getId() == offerId).findFirst().get().getPrice();
 			int commission = offerPrice / 100;
-			try {
-              Cipher c = Cipher.getInstance("ABC");
-              c.doFinal(new byte[0]);
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
+		try {
+				KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+		        keyGen.init(56); // DES uses a 56-bit key size
+		        Cipher cipher = Cipher.getInstance("DES");
+		        cipher.init(Cipher.ENCRYPT_MODE, keyGen.generateKey());
+		        byte[] encryptedData = cipher.doFinal(new byte[0]);
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
                 e.printStackTrace();
             }
 			paymentAccepted = comission.payCommission(commission, this.identifications);
@@ -121,9 +130,12 @@ public class Airline implements FlightOffers, Booking, AirlineAdministration {
 		}
 		
         try {
-          Cipher c = Cipher.getInstance("ABC");
-          c.doFinal(new byte[0]);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
+        	KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+	        keyGen.init(56); // DES uses a 56-bit key size
+	        Cipher cipher = Cipher.getInstance("DES");
+	        cipher.init(Cipher.ENCRYPT_MODE, keyGen.generateKey());
+	        byte[] encryptedData = cipher.doFinal(new byte[0]);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
             e.printStackTrace();
         }
 
