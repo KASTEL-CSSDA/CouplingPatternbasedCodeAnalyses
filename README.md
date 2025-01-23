@@ -1,5 +1,8 @@
+**This prototype is archived. For the new version, please visit** [https://github.com/KASTEL-CSSDA/CouplingPatternSearchBasedSourceCodeAnalyses](https://github.com/KASTEL-CSSDA/CouplingPatternSearchBasedSourceCodeAnalyses)
+
 # CouplingPatternbasedCodeAnalyses
 Coupling architecture security properties with code pattern violations.
+
 
 ## Dependencies
 Before you can run the program, copy the following dependencies to `./src/main/resources`:
